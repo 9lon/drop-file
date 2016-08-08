@@ -1,0 +1,17 @@
+{
+  "name": "nx-dropfile",
+  "homepage": "https://github.com/nx-element/nx-dropfile",
+  "authors": [
+    "Namkhaeng PC-NEXT <pongpanot.t@nexts-corp.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

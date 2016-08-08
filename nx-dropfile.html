@@ -1,0 +1,65 @@
+<dom-module id="nx-dropfile">
+    <style>
+        .dropzone{
+            background-color:#CCC;
+        }
+    </style>
+    <template>
+        <input id="dropSelect" type="file" id="input" multiple>
+        <div id="dropzone" class="dropzone">
+            dropfile
+            <template is="dom-repeat" items="{{files}}">
+              {{item.name}}<br>
+           </template>
+        </div>
+    </template>
+    <script>
+
+        Polymer({
+            is:'nx-dropfile',
+            properties:{
+                files:{
+                    type:Object,
+                    value:function(){
+                        return [];
+                    },
+                    notify:true
+                }
+            },
+            ready:function(){
+                this.testza = this;
+                var dropzone = this.$.dropzone;
+                dropzone.ondragover = dropzone.ondragenter = function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+                
+                var rootDom = this;
+
+                dropzone.ondrop = function(event){
+                    event.stopPropagation();
+                    event.preventDefault();
+                    
+                    var files = event.dataTransfer.files;
+                    for (var i=0; i<files.length; i++) {
+                        console.log(files[i]);
+                        rootDom.push('files',files[i]);
+                    }
+                }
+
+                
+
+                this.$.dropSelect.onchange = function(){
+                    var files = this.files;
+                    for (var i = 0; i < files.length; i++) {
+                        console.log(files[i]);
+                        rootDom.push('files',files[i]);
+                    }
+                }
+                
+            }
+        });
+
+    </script>
+
+</dom-module>
