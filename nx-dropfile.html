@@ -53,6 +53,13 @@
                     var files = this.files;
                     for (var i = 0; i < files.length; i++) {
                         console.log(files[i]);
+
+                        var r = new FileReader();
+                        r.onload = function(){ console.log(r.result); };
+                        //r.readAsDataURL(files[i]);
+                        //r.readAsBinaryString(files[i]);
+                        r.readAsArrayBuffer(files[i]);
+
                         rootDom.push('files',files[i]);
                     }
                 }
