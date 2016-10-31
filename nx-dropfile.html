@@ -12,6 +12,7 @@
               {{item.name}}<br>
            </template>
         </div>
+        <button on-tap="upload">upload</button>
     </template>
     <script>
 
@@ -52,18 +53,30 @@
                 this.$.dropSelect.onchange = function(){
                     var files = this.files;
                     for (var i = 0; i < files.length; i++) {
-                        console.log(files[i]);
+                        //console.log(files[i]);
 
-                        var r = new FileReader();
-                        r.onload = function(){ console.log(r.result); };
+                        //var r = new FileReader();
+                        //r.onload = function(){ console.log(r.result); };
                         //r.readAsDataURL(files[i]);
                         //r.readAsBinaryString(files[i]);
-                        r.readAsArrayBuffer(files[i]);
+                        //r.readAsArrayBuffer(files[i]);
 
                         rootDom.push('files',files[i]);
                     }
                 }
                 
+            },
+            upload:function(){
+                var data = new FormData();
+                data.append('file',this.files[0]);
+
+                axios.put('http://localhost:3000/api/eu/test/upload', data)
+                .then(function (res) {
+                    console.log(res.data);
+                })
+                .catch(function (err) {
+                    console.log(err.message);
+                });
             }
         });
 

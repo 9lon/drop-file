@@ -16,5 +16,8 @@
   ],
   "devDependencies": {
     "polymer": "Polymer/polymer#^1.6.1"
+  },
+  "dependencies": {
+    "axios": "^0.15.2"
   }
 }
