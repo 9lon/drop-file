@@ -54,11 +54,10 @@
                             {{item.name}}
                         </div>
                         <div>
-                             {{item.percent}}
-
+                            
                         </div>
                     </div>
-                    <paper-progress hidden$="false" value="0" min="0" max="100"></paper-progress>
+                    <paper-progress hidden$="false" value="{{percent(item.percent)}}" min="0" max="100"></paper-progress>
                 </template>
 				
 
@@ -149,11 +148,17 @@
                 });
             },
             downloadFile:function(e){
+                console.log('test');
                 if(e.currentTarget.key){
                     console.log(e.currentTarget.key);
                     window.open("http://localhost:3000/api/eu/test/download/"+e.currentTarget.key, '_blank');
                 }
+            },
+            percent:function(data){
+                var str = String(data*100).split('.');
+                return parseInt(str[0]);
             }
+
         });
 
     </script>
