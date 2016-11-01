@@ -6,10 +6,13 @@
     </style>
     <template>
         <input id="dropSelect" type="file" id="input" multiple>
-        <div id="dropzone" class="dropzone">
+        <div id="dropzone" class="dropzone" >
             dropfile
             <template is="dom-repeat" items="{{files}}">
-              {{item.name}} // {{item.percent}}<br>
+                <div on-tap="downloadFile" key="{{item.key}}">
+                    {{item.name}} // {{item.percent}}
+                </div>
+              
            </template>
         </div>
         <button on-tap="upload">upload</button>
@@ -36,58 +39,65 @@
                 }
                 
                 var rootDom = this;
+                var pushFiles = (files)=>{
+                    for (var i = 0; i < files.length; i++) {
+                        rootDom.push('files',files[i]);
+                    }
+                }
 
                 dropzone.ondrop = function(event){
                     event.stopPropagation();
                     event.preventDefault();
                     
                     var files = event.dataTransfer.files;
-                    for (var i=0; i<files.length; i++) {
-                        console.log(files[i]);
-                        rootDom.push('files',files[i]);
-                    }
+                    pushFiles(files);
+                    rootDom.upload();
                 }
-
-                
 
                 this.$.dropSelect.onchange = function(){
                     var files = this.files;
-                    for (var i = 0; i < files.length; i++) {
-                        //console.log(files[i]);
-
-                        //var r = new FileReader();
-                        //r.onload = function(){ console.log(r.result); };
-                        //r.readAsDataURL(files[i]);
-                        //r.readAsBinaryString(files[i]);
-                        //r.readAsArrayBuffer(files[i]);
-
-                        rootDom.push('files',files[i]);
-                    }
+                    pushFiles(files);
+                    rootDom.upload();
                 }
                 
             },
             upload:function(){
 
                 this.files.map((fileItem,i)=>{
-                
-                    var data = new FormData();
-                    data.append('file',fileItem);
+                    if(typeof fileItem.status == "undefined"){
+                        this.set(`files.${i}.status`,'uploading');
 
-                    var config = {
-                        onUploadProgress: (progressEvent)=>{
-                            var percentCompleted = progressEvent.loaded / progressEvent.total;
-                            this.set(`files.${i}.percent`,percentCompleted);
-                        }
-                    };
+                        var data = new FormData();
+                        data.append('file',fileItem);
 
-                    axios.put('http://localhost:3000/api/eu/test/upload', data,config)
-                    .then(function (res) {
-                        console.log(res.data);
-                    })
-                    .catch(function (err) {
-                        console.log(err.message);
-                    });
+                        var config = {
+                            onUploadProgress: (progressEvent)=>{
+                                var percentCompleted = progressEvent.loaded / progressEvent.total;
+                                this.set(`files.${i}.percent`,percentCompleted);
+                                if(percentCompleted==1){
+                                    this.set(`files.${i}.status`,'complete');
+                                }
+                            }
+                        };
+
+                        axios.put('http://localhost:3000/api/eu/test/upload', data,config)
+                        .then( (res)=>{
+                            this.set(`files.${i}.key`,res.data.generated_keys[0]);
+                            console.log(this.files);
+                        })
+                        .catch( (err)=>{
+                            console.log(err.message);
+                        });
+                    }
+
+
                 });
+            },
+            downloadFile:function(e){
+                if(e.currentTarget.key){
+                    console.log(e.currentTarget.key);
+                    window.open("http://localhost:3000/api/eu/test/download/"+e.currentTarget.key, '_blank');
+                }
             }
         });
 
