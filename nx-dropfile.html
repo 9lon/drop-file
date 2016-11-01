@@ -9,7 +9,7 @@
         <div id="dropzone" class="dropzone">
             dropfile
             <template is="dom-repeat" items="{{files}}">
-              {{item.name}}<br>
+              {{item.name}} // {{item.percent}}<br>
            </template>
         </div>
         <button on-tap="upload">upload</button>
@@ -67,15 +67,26 @@
                 
             },
             upload:function(){
-                var data = new FormData();
-                data.append('file',this.files[0]);
 
-                axios.put('http://localhost:3000/api/eu/test/upload', data)
-                .then(function (res) {
-                    console.log(res.data);
-                })
-                .catch(function (err) {
-                    console.log(err.message);
+                this.files.map((fileItem,i)=>{
+                
+                    var data = new FormData();
+                    data.append('file',fileItem);
+
+                    var config = {
+                        onUploadProgress: (progressEvent)=>{
+                            var percentCompleted = progressEvent.loaded / progressEvent.total;
+                            this.set(`files.${i}.percent`,percentCompleted);
+                        }
+                    };
+
+                    axios.put('http://localhost:3000/api/eu/test/upload', data,config)
+                    .then(function (res) {
+                        console.log(res.data);
+                    })
+                    .catch(function (err) {
+                        console.log(err.message);
+                    });
                 });
             }
         });
