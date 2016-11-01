@@ -1,0 +1,67 @@
+
+
+<dom-module id="nx-uploadfile">
+
+    <template>
+    <style>
+        paper-progress {
+            width:auto;
+            --paper-progress-indeterminate-cycle-duration: 20s;
+        }
+        .font{
+             font-size: 20px;
+         }
+        div>span{
+            height: 90px;
+            margin-left:20%;
+        }
+        div>paper-progress{
+             margin-left:5%;
+        }
+        .container{
+            margin-top:5px;
+            padding: 10px;
+            background-color:#ccc;
+            align-items:center;
+        }
+        .panel{
+           border-bottom: 1px solid #ddd;
+        }
+        paper-fab{
+            background-color: orange;
+        }
+        .flex-horizontal {
+            @apply(--layout-horizontal);
+        }
+        .flexchild {
+            @apply(--layout-flex);
+            margin-left:10px;
+        }
+    </style>
+        <!--<div class="font panel container">
+          
+            <div>
+                <paper-fab icon="favorite"></paper-fab>
+                <span>  filename: </span>
+            </div>
+            <div>
+              
+                <paper-progress hidden$="false" value="99" min="0" max="100"></paper-progress>
+            </div>      
+        </div> -->
+        <div class="container flex-horizontal">
+            <!--<div><paper-fab mini icon="favorite"></paper-fab></div>-->
+            <paper-icon-button icon="editor:insert-drive-file" title="heart"></paper-icon-button>
+            <div class="flexchild">
+                filename.test
+            </div>
+            <div>complete</div>
+        </div>
+        <paper-progress hidden$="false" value="99" min="0" max="100"></paper-progress>
+    </template>
+    <script>
+        Polymer({
+            is: 'nx-uploadfile'
+        });
+    </script>
+</dom-module>
